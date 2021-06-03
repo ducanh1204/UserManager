@@ -3,6 +3,10 @@ package com.example.usermanager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -38,49 +42,48 @@ public class MainActivity extends AppCompatActivity {
         userDAO = new UserDAO(this);
         userList = userDAO.getAll();
         if (userList.size() > 0) {
-            recyclerViewAdapter = new RecyclerViewAdapter(userList, this);
+            recyclerViewAdapter = new RecyclerViewAdapter(userList, this, new RecyclerViewAdapter.OnClickItemListener() {
+                @Override
+                public void onClick_Delte(int position) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage("Bạn có chắc chắn muốn xóa Sách này?");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            userDAO.deleteUser(userList.get(position).getId());
+                            userList.remove(position);
+                            recyclerViewAdapter.notifyItemRemoved(position);
+                        }
+                    });
+                    builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+
+                @Override
+                public void onClick_Edit(int position) {
+                    Intent intent = new Intent(MainActivity.this,UpdateDataActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("position",position);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
             rvList.setAdapter(recyclerViewAdapter);
         }
 
         btnAddData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // check username, và check id
-                String username = "Ducanh";
-                User user = new User();
-                for (int i = 0; i < userList.size(); i++) {
-                    if (userList.get(i).getUserName().equals(username)) {
-                        Toast.makeText(MainActivity.this, "Tên người dùng đã tồn tại", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                int id = 0;
-                for (int i = 0; i < userList.size(); i++) {
-                    if (id < userList.get(i).getId())
-                        id = userList.get(i).getId();
-                }
-                id++;
-
-                user.setId(id);
-                user.setUserName(username);
-                user.setPassword("Ducanh12");
-                user.setFullName("NGUYỄN ĐỨC ANH");
-                user.setGender("NAM");
-                user.setBirthday("12/04/2000");
-                user.setAddress("Ha Noi");
-                user.setCccd("030200004945");
-                user.setPhoto(null);
-                user.setFinger(null);
-
-                long result = userDAO.insertUser(user);
-                if (result > 0) {
-                    Toast.makeText(MainActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-                    recreate();
-                } else {
-                    Toast.makeText(MainActivity.this, "Thêm thất bại", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(MainActivity.this,InsertDataActivity.class);
+                startActivity(intent);
             }
         });
     }
+
+
 }

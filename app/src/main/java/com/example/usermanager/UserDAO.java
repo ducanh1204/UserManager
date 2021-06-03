@@ -101,14 +101,14 @@ public class UserDAO {
         contentValues.put(FINGER, user.getFinger());
         contentValues.put(CCCD, user.getCccd());
 
-        long result = sqLiteDatabase.update(TABLE_NAME, contentValues,ID + "=?",new String[user.getId()]);
+        long result = sqLiteDatabase.update(TABLE_NAME, contentValues,ID + "=?",new String[]{String.valueOf(user.getId())});
         sqLiteDatabase.close();
         return result;
     }
-    public void deleteUser(String id) {
+    public void deleteUser(int id) {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
-        sqLiteDatabase.delete(TABLE_NAME, ID + "=?", new String[]{id});
+        sqLiteDatabase.delete(TABLE_NAME, ID + "=?", new String[]{String.valueOf(id)});
 
     }
 }
