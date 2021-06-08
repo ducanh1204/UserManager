@@ -71,7 +71,6 @@ public class UserDAO {
         SQLiteDatabase sqLiteDatabase = mySqliteOpenHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID, user.getId());
         contentValues.put(USER_NAME, user.getUserName());
         contentValues.put(PASSWORD, user.getPassword());
         contentValues.put(FULL_NAME, user.getFullName());

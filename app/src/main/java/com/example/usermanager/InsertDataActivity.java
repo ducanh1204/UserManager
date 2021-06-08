@@ -45,19 +45,8 @@ public class InsertDataActivity extends AppCompatActivity {
 
     public void addData(){
         User user = new User();
-
-        //  check id k trùng và tự động thêm
-        int id = 0;
-        for (int i = 0; i < userList.size(); i++) {
-            if (id < userList.get(i).getId())
-                id = userList.get(i).getId();
-        }
-        id++;
-        user.setId(id);
-
         user.setUserName(null);
         if(!edtUserName.getText().toString().trim().equals("")){
-
             // check username k trùng
             for (int i = 0; i < userList.size(); i++) {
                 if (userList.get(i).getUserName().equals(edtUserName.getText().toString().trim())) {
@@ -65,10 +54,8 @@ public class InsertDataActivity extends AppCompatActivity {
                     return;
                 }
             }
-
             user.setUserName(edtUserName.getText().toString().trim());
         }
-
 
         user.setPassword(null);
         if(!edtPassword.getText().toString().trim().equals("")){
